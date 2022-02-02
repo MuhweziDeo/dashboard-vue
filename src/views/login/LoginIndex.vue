@@ -35,13 +35,19 @@
             :disabled="$v.$invalid || loading"
             >Login</v-btn
           >
-          <v-divider class="my-5" />
-          <p class="text-center">
+           <p class="mt-2">
             Forgot your password?
-            <v-btn color="primary" small text link to="/reset-password"
+            <v-btn color="primary"  small text link to="/reset-password"
               >Reset</v-btn
             >
           </p>
+          <v-divider class="my-3" />
+         
+
+         
+            <v-btn color="primary" block  link to="/register"
+              >Dont have an Account? Register</v-btn
+            >
         </v-form>
       </v-card>
     </v-row>
