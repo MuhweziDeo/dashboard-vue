@@ -36,7 +36,14 @@
             @input="$v.confirmPassword.$touch()"
             @blur="$v.confirmPassword.$touch()"
           />
-          <v-btn @click="register()" :loading="loading" block color="primary" :disabled="$v.$invalid">Register</v-btn>
+          <v-btn
+            @click="register()"
+            :loading="loading"
+            block
+            color="primary"
+            :disabled="$v.$invalid"
+            >Register</v-btn
+          >
           <v-divider class="my-5" />
           <p class="text-center">
             Already registered?
@@ -87,18 +94,28 @@ export default {
   },
   methods: {
     async register() {
-      const{email, password} = this;
-      console.log(this.axios)
+      const { email, password } = this;
+      console.log(this.axios);
       this.loading = true;
       try {
-        const {data} = await this.axios.post('/rest-auth/registration/', {email, password});
-        console.log(data);
+        const { data } = await this.axios.post("/rest-auth/registration/", {
+          email,
+          password,
+        });
+        this.$v.$reset();
+        localStorage.setItem("token", data.key);
+        this.email = "";
+        this.password = "";
+        this.confirmPassword = "";
+        this.$toast.success(
+          "Sign up successfull!"
+        );
       } catch (error) {
-        console.log(error)
-      }finally {
+        console.log(error);
+      } finally {
         this.loading = false;
       }
-    }
+    },
   },
   validations: {
     email: {

@@ -35,19 +35,17 @@
             :disabled="$v.$invalid || loading"
             >Login</v-btn
           >
-           <p class="mt-2">
+          <p class="mt-2">
             Forgot your password?
-            <v-btn color="primary"  small text link to="/reset-password"
+            <v-btn color="primary" small text link to="/reset-password"
               >Reset</v-btn
             >
           </p>
           <v-divider class="my-3" />
-         
 
-         
-            <v-btn color="primary" block  link to="/register"
-              >Dont have an Account? Register</v-btn
-            >
+          <v-btn color="primary" block link to="/register"
+            >Dont have an Account? Register</v-btn
+          >
         </v-form>
       </v-card>
     </v-row>
@@ -90,8 +88,11 @@ export default {
           email,
           password,
         });
-        console.log(data);
+        this.$v.$reset();
         localStorage.setItem("token", data.key);
+        this.$toast.success(
+          "Login Successful"
+        );
         this.$toast.success("Login Successful");
         this.email = "";
         this.password = "";

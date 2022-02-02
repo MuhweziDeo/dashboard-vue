@@ -2,7 +2,6 @@
   <v-app>
     <v-app-bar
       app
-      color="primary"
       dark
     >
       <div class="d-flex align-center">
@@ -27,31 +26,73 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+    <template v-if="!loading">
+      <v-avatar v-if="isAuthenticated" color="indigo">
+      <v-icon dark>
+        mdi-account-circle
+      </v-icon>
+    </v-avatar>
+    <template v-else>
+      <v-btn color="primary" small link to="/" v-if="$route.name !== 'login'">Login</v-btn>
+      <v-btn color="primary" small link v-if="$route.name !== 'register'" to="/register">Register</v-btn>
+    </template>
+    </template>
+
+    <template v-else>
+      <v-progress-circular color="white" size="40" indeterminate/>
+    </template>
+
     </v-app-bar>
 
     <v-main>
-  <router-view></router-view>
+      <v-row v-if="loading" class="loader" justify="center" align-content="center" >
+            <v-progress-circular color="primary" size="40" indeterminate/>
+
+      </v-row>
+    <router-view v-else></router-view>
     </v-main>
   </v-app>
 </template>
 
 <script>
-
+import { mapMutations, mapGetters } from "vuex";
 export default {
-  name: 'App',
-
+  name: "App",
+  async mounted() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      this.loading = false;
+    } else {
+      console.log(token);
+      try {
+        const { data } = await this.axios.get("/rest-auth/user/");
+        console.log({ data });
+        // add a guard to prevent authenticated user from viewing this page
+        this.setAuthSucess(data);
+      } catch (error) {
+        localStorage.removeItem("token");
+      } finally {
+        this.loading = false;
+      }
+    }
+  },
   components: {},
 
   data: () => ({
-    //
+    loading: true,
   }),
+  methods: {
+    ...mapMutations({ setAuthSucess: "auth/SET_AUTH_SUCCESS" }),
+  },
+  computed: {
+    ...mapGetters({ isAuthenticated: "auth/GET_IS_AUTHENTICATED" }),
+  },
 };
 </script>
+
+<style lang="scss">
+.loader {
+  min-height: 90vh;
+  margin: 0 auto;
+}
+</style>
