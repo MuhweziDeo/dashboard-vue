@@ -93,10 +93,11 @@ export default {
         this.$toast.success(
           "Login Successful"
         );
-        this.$toast.success("Login Successful");
         this.email = "";
         this.password = "";
+        this.$router.push('/apps');
       } catch (error) {
+        this.$toast.error(error.message || 'Something went wrong')
         console.log(error);
       } finally {
         this.loading = false;
