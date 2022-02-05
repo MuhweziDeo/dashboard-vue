@@ -63,10 +63,8 @@ export default {
     if (!token) {
       this.loading = false;
     } else {
-      console.log(token);
       try {
         const { data } = await this.axios.get("/rest-auth/user/");
-        console.log({ data });
         // add a guard to prevent authenticated user from viewing this page
         this.setAuthSucess(data);
       } catch (error) {
