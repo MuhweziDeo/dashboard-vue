@@ -5,33 +5,27 @@
       dark
     >
       <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+        App
       </div>
 
       <v-spacer></v-spacer>
 
     <template v-if="!loading">
-      <v-avatar v-if="isAuthenticated" color="indigo">
-      <v-icon dark>
-        mdi-account-circle
-      </v-icon>
-    </v-avatar>
+      <v-menu offset-y v-if="isAuthenticated">
+        <template v-slot:activator="{ on, attrs }">
+
+                <v-avatar   v-bind="attrs"
+                            v-on="on" v-if="isAuthenticated" color="indigo">
+                <span>{{avatar}}</span>
+              </v-avatar>
+        </template>
+        <v-list>
+          <v-list-item @click="logout">
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
     <template v-else>
       <v-btn color="primary" small link to="/" v-if="$route.name !== 'login'">Login</v-btn>
       <v-btn color="primary" small link v-if="$route.name !== 'register'" to="/register">Register</v-btn>
@@ -62,13 +56,14 @@ export default {
     const token = localStorage.getItem("token");
     if (!token) {
       this.loading = false;
+      this.$router.push('/');
     } else {
       try {
         const { data } = await this.axios.get("/rest-auth/user/");
-        // add a guard to prevent authenticated user from viewing this page
-        this.setAuthSucess(data);
+        this.setAuthSuccess(data);
       } catch (error) {
         localStorage.removeItem("token");
+        this.$router.push('/');
       } finally {
         this.loading = false;
       }
@@ -80,10 +75,21 @@ export default {
     loading: true,
   }),
   methods: {
-    ...mapMutations({ setAuthSucess: "auth/SET_AUTH_SUCCESS" }),
+    ...mapMutations({ setAuthSuccess: "auth/SET_AUTH_SUCCESS", setLogOut: 'auth/SET_AUTH_LOGOUT' }),
+    logout() {
+      const confirm = window.confirm('Are u sure you want to logout')
+      if (confirm) {
+        this.setLogOut();
+        this.$toast.success('Logout successful');
+        this.$router.push('/');
+      }
+    }
   },
   computed: {
-    ...mapGetters({ isAuthenticated: "auth/GET_IS_AUTHENTICATED" }),
+    ...mapGetters({ isAuthenticated: "auth/GET_IS_AUTHENTICATED", user: "auth/GET_USER"  }),
+    avatar() {
+      return this.user.email?.charAt(0)?.toUpperCase()
+    }
   },
 };
 </script>

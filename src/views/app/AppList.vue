@@ -26,6 +26,10 @@
           mdi-delete
         </v-icon>
       </template>
+
+      <template v-slot:item.subscription="{item}">
+       <v-btn link x-small rounded color="primary" :to="`/apps/${item.id}/edit?tab=subscription`">Upgrade</v-btn>
+      </template>
     </v-data-table>
   </div>
 </template>
@@ -48,6 +52,8 @@ export default {
         { text: 'Framework', value: 'framework' },
         { text: 'Domain Name', value: 'domain_name' },
         { text: 'Actions', value: 'actions', sortable: false },
+        { text: 'Subscription', value: 'subscription', sortable: false },
+
       ],
       apps: [],
     }
