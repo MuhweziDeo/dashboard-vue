@@ -5,7 +5,7 @@
         <v-list-item>
           <v-list-item-avatar>
             <v-avatar color="primary">
-              <span class="white--text text-h5">{{user.email.charAt(0)}}</span>
+              <span class="white--text text-h5">{{avatar}}</span>
             </v-avatar>
           </v-list-item-avatar>
 
@@ -28,7 +28,6 @@
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-      <!-- </v-card> -->
     </v-col>
     <v-col cols="8" class="ml-10">
       <router-view></router-view>
@@ -44,14 +43,15 @@ export default {
     return {
       drawer: true,
       items: [
-        { title: "Home", icon: "mdi-home-city", link: '/home'},
         { title: "Apps", icon: "mdi-account", link: '/apps'},
-        // { title: "Users", icon: "mdi-account-group-outline" },
       ],
     };
   },
   computed: {
     ...mapGetters({ isOpen: "drawer/GET_DRAWER_OPEN", user: "auth/GET_USER" }),
+    avatar() {
+      return this.user.email?.charAt(0)?.toUpperCase()
+    }
   },
   methods: {
     ...mapMutations({ setDrawerOpen: "drawer/SET_DRAWER_OPEN" }),
