@@ -41,7 +41,7 @@
             :loading="loading"
             block
             color="primary"
-            :disabled="$v.$invalid"
+            :disabled="$v.$invalid || loading"
             >Register</v-btn
           >
           <v-divider class="my-5" />
@@ -95,7 +95,6 @@ export default {
   methods: {
     async register() {
       const { email, password } = this;
-      console.log(this.axios);
       this.loading = true;
       try {
         const { data } = await this.axios.post("/rest-auth/registration/", {
@@ -108,10 +107,14 @@ export default {
         this.password = "";
         this.confirmPassword = "";
         this.$toast.success(
-          "Sign up successfull!"
+          "Sign up successful!"
         );
+        this.$router.push('/');
       } catch (error) {
         console.log(error);
+        this.$toast.error(
+            error.response?.data?.email || error.message || 'Something went wrong'
+        );
       } finally {
         this.loading = false;
       }

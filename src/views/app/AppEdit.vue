@@ -158,7 +158,7 @@ export default {
           framework,
           domain_name
         }
-        await this.axios.patch(`/api/v1/apps/${this.app.id}`, data);
+        await this.axios.patch(`/api/v1/apps/${this.app.id}/`, data);
         this.loading = false;
         this.$toast.success('App has been updated');
         this.$v.$reset();
@@ -170,15 +170,7 @@ export default {
     },
     async tabChange(tab) {
       if(tab === 'subscription' && !this.plans.length) {
-        try {
-          this.loadingPlans = true;
-        const {data} =  await this.axios.get(`/api/v1/plans`);
-          this.plans = data;
-        }catch (e) {
-          this.$toast.error(e.message || 'Something went wrong');
-        }finally {
-          this.loadingPlans = false;
-        }
+        await this.fetchPlans();
       }
     },
    async saveSubscription(id) {
@@ -198,6 +190,17 @@ export default {
 
      }
     },
+    async fetchPlans() {
+      try {
+        this.loadingPlans = true;
+        const {data} =  await this.axios.get(`/api/v1/plans`);
+        this.plans = data;
+      }catch (e) {
+        this.$toast.error(e.message || 'Something went wrong');
+      }finally {
+        this.loadingPlans = false;
+      }
+    }
   },
   async mounted() {
     if(Object.keys(this.app).length) {
@@ -224,6 +227,7 @@ export default {
 
       }
     }
+    await this.fetchPlans();
 
 
     if(this.subscriptionId) {

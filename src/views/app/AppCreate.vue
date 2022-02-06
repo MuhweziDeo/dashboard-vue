@@ -110,7 +110,7 @@ export default {
           framework,
           domain_name
         }
-        await this.axios.post('/api/v1/apps', data);
+        await this.axios.post('/api/v1/apps/', data);
         this.loading = false;
         this.$toast.success('App has been created');
         this.$v.$reset();

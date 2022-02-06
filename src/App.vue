@@ -80,6 +80,7 @@ export default {
       const confirm = window.confirm('Are u sure you want to logout')
       if (confirm) {
         this.setLogOut();
+        localStorage.removeItem('token')
         this.$toast.success('Logout successful');
         this.$router.push('/');
       }

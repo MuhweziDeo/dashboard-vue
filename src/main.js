@@ -3,10 +3,10 @@ import VueRouter from 'vue-router'
 import VueAxios from 'vue-axios'
 import Vuelidate from 'vuelidate'
 import VuetifyToast from 'vuetify-toast-snackbar'
- 
+
 Vue.use(VuetifyToast, {
     x: 'right',
-    y: 'bottom',
+    y: 'top',
     color: 'info',
     icon: 'info',
     iconColor: '',
