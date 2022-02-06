@@ -9,11 +9,29 @@
         class="elevation-1"
         :disable-pagination="true"
         :loading="loading"
-    ></v-data-table>
+    >
+
+      <template v-slot:item.actions="{ item }">
+        <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon
+            small
+            @click="deleteItem(item)"
+        >
+          mdi-delete
+        </v-icon>
+      </template>
+    </v-data-table>
   </div>
 </template>
 
 <script>
+import {mapMutations} from 'vuex';
 export default {
   data () {
     return {
@@ -29,6 +47,7 @@ export default {
         { text: 'Type', value: 'type' },
         { text: 'Framework', value: 'framework' },
         { text: 'Domain Name', value: 'domain_name' },
+        { text: 'Actions', value: 'actions', sortable: false },
       ],
       apps: [],
     }
@@ -43,7 +62,32 @@ export default {
     }finally {
       this.loading = false;
     }
+  },
+  methods: {
+    ...mapMutations({
+      setEditItem: 'app/SET_EDIT_ITEM',
+    }),
+    editItem(item) {
+      console.log(item);
+      this.setEditItem(item);
+      this.$router.push(`/apps/${item.id}/edit`)
+    },
+    async deleteItem(item) {
+      const confirm = window.confirm('Are sure you want to delete this')
+       if(confirm) {
+         try {
+           this.loading = true;
+           await this.axios.delete(`/api/v1/apps/${item.id}`);
+           this.apps = this.apps.filter((app) => app.id !== item.id);
+           this.$toast.success('App has been deleted');
+         }catch (e) {
+           this.$toast.error(e.message || 'Something went wrong');
+         }finally {
+           this.loading = false;
+         }
 
+       }
+    }
   }
 }
 </script>

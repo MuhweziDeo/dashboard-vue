@@ -31,6 +31,11 @@ const routes = [
         path: '/apps/create',
         name: 'app-create',
         component: () => import('@/views/app/AppCreate.vue')
+      },
+      {
+        path: '/apps/:id/edit',
+        name: 'app-edit',
+        component: () => import('@/views/app/AppEdit.vue')
       }
     ],
   }
