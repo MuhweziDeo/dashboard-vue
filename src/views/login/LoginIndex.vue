@@ -54,6 +54,8 @@
 
 <script>
 import { required, minLength, email } from "vuelidate/lib/validators";
+import { mapMutations } from "vuex";
+
 export default {
   data() {
     return {
@@ -80,6 +82,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations({setAuthSuccess: "auth/SET_AUTH_SUCCESS"}),
     async login() {
       const { email, password } = this;
       this.loading = true;
@@ -89,6 +92,8 @@ export default {
           password,
         });
         this.$v.$reset();
+        const { data: user } = await this.axios.get("/rest-auth/user/");
+        this.setAuthSuccess(user);
         localStorage.setItem("token", data.key);
         this.$toast.success(
           "Login Successful"
@@ -98,7 +103,6 @@ export default {
         this.$router.push('/apps');
       } catch (error) {
         this.$toast.error(error.message || 'Something went wrong')
-        console.log(error);
       } finally {
         this.loading = false;
       }
