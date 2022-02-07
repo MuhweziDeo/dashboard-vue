@@ -1,5 +1,6 @@
 # dashboard-vue
 
+Demo Link https://affectionate-booth-87a6da.netlify.app/
 ## Project setup
 ```
 yarn install
@@ -20,5 +21,7 @@ yarn build
 yarn lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Not Included
+
+ - Tests
+
